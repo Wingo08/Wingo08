@@ -1,0 +1,323 @@
+#Very simple football cup simulation
+#STUDENT NAME: Ciaran McWilliam
+
+import random
+import time
+import os
+
+print("A colon at the end of a statement means that you need to press enter to continue")
+input("Like this : ")
+
+os.system('clear') # Clears the console screen
+
+#initialising values
+
+#borders
+
+myTopLeft = "╔"
+myTopRight = "╗"      
+myBotLeft = "╚"     
+myBotRight = "╝"
+myHorizontal = "═"
+myVertical = "║"
+myDividerLeft = "╠"
+myDividerRight = "╣"
+
+#colours
+
+class fg:
+    BLACK   = '\033[30m'
+    RED     = '\033[31m'
+    GREEN   = '\033[32m'
+    YELLOW  = '\033[33m'
+    BLUE    = '\033[34m'
+    MAGENTA = '\033[35m'
+    CYAN    = '\033[36m'
+    WHITE   = '\033[37m'
+    RESET   = '\033[39m'
+
+class bg:
+    BLACK   = '\033[40m'
+    RED     = '\033[41m'
+    GREEN   = '\033[42m'
+    YELLOW  = '\033[43m'
+    BLUE    = '\033[44m'
+    MAGENTA = '\033[45m'
+    CYAN    = '\033[46m'
+    WHITE   = '\033[47m'
+    RESET   = '\033[49m'
+
+class style:
+    BRIGHT    = '\033[1m'
+    DIM       = '\033[2m'
+    NORMAL    = '\033[22m'
+    RESET_ALL = '\033[0m'
+
+GoofyGoobers = "Goofy Goobers"
+
+footBallTeams = ["Arsenal","Aston Villa","Barnsley","Birmingham City","Blackburn Rovers","Blackpool","Bolton Wanderers","AFC Bournemouth","Bradford City","Burnley","Cardiff City","Charlton Athletic","Chelsea","Coventry City","Crystal Palace","Derby County","Everton",GoofyGoobers,"Huddersfield Town","Hull City","Ipswich Town","Leeds United","Leicester City","Liverpool","Manchester City","Manchester United","Middlesbrough","Newcastle United","Norwich City","Nottingham Forest","Oldham Athletic","Portsmouth",]
+
+#prints out ascii art of a football team
+def Show_Winning_Team(teamForAward):
+    os.system('clear')
+
+    input(""" And here we have the winning team, """+teamForAward+"""!!
+
+        john         bob        eli       henry      joe        tall tim
+                                                                
+                                                                 ,/)
+                                                                 |_|
+           _          _          _          _          _         ].[
+          |.|        |.|        |.|        |.|        |.|      /~`-'~\\
+          ]^[        ]^[        ]^[        ]^[        ]^[     (<|%  |>)
+        /~`-'~\\    /~`-'~\\    /~`-'~\\    /~`-'~\\    /~`-'~\\    \\|___|/
+       {<|%  |>}  {<|%  |>}  {<|%  |>}  {<|%  |>}  {<|%  |>}   {/   \\}
+        \\|___|/    \\|___|/    \\|___|/    \|___|/    \\|___|/    /__|__\\
+       /\\    \\      /   \\      /   \\      /   \\      /   \\     | / \\ |
+       |/>/|__\\    /__|__\\    /__|__\\    /__|__\\    /__|__\\    |/   \\|
+      _|)   \\ |    | / \\ |    | / \\ |    | / \\ |    | / \ |    {}   {}
+     (_,|    \\)    (/   \\)    (/   \\)    (/   \\)    (/   \)    |)   (|
+     / \\     (|_  _|)   (|_  _|)   (|_  _|)   (|_  _|)   (|_  _||   ||_
+    
+    : """)
+
+def Play_Round(teams1,Xround):
+
+    #variable to print round in a neat box
+    roundBox = """
+      ╔═════════╗
+      ║ Round {} ║
+      ╚═════════╝
+    """.format(Xround+1)
+
+    #function to do it for pens
+    def Penalty_Round_Box(roundNum) :
+        print("""{}
+        ╔═══════════════════╗
+        ║ Penalties Round {} ║
+        ╚═══════════════════╝
+        {}""".format(fg.YELLOW + style.BRIGHT,roundNum,style.RESET_ALL))
+    
+    #penalty round box for finals
+    def PRB_Finals():
+        print("""{}
+        ╔═════════════════════╗
+        ║ Finals Pens Round {} ║
+        ╚═════════════════════╝
+        {}""".format(fg.YELLOW + style.BRIGHT,roundNum,style.RESET_ALL))
+
+    #initialising lists
+    teams2 = []
+    scores1 = []
+    scores2 = []
+    winningTeams = []
+    drawingTeams1 = []
+    drawingTeams2 = []
+
+    # Randomises the order of the teams
+    for group in teams1:
+      ranNum = random.randint(0,len(teams1))
+      teams1.remove(group)
+      teams1.insert(ranNum,group)
+    
+    #after list is shuffled, it is split into 2 equal lists
+    for i in range(int(len(teams1)/2)):
+        teams2.append(teams1[i])
+        teams1.remove(teams1[i])
+
+    # Gets score for each team, random from 1 - 7 and randomly gives one team 1 extra point if its equal.
+
+    for i in range(len(teams1)):
+        if teams1[i] != GoofyGoobers and teams2[i] != GoofyGoobers:
+            score1 = random.randint(0,5)
+            score2 = random.randint(0,5)
+
+    #Makes the game rigged so Goofy Goobers FC wins more often than not, because I can.
+        else:
+            if teams1[i] == GoofyGoobers:
+                score2 = random.randint(0,5)
+                score1 = random.randint(0,1) + (score2)
+            
+            elif teams2[i] == GoofyGoobers:
+                score1 = random.randint(0,5)
+                score2 = random.randint(0,1) + (score1)
+        
+        
+
+        #adds scores to scorelist
+        scores1.append(score1)
+        scores2.append(score2)
+
+    #prints out the matchups nicely
+    for i in range(len(teams1)):
+        print("{:<18} vs {:<18}".format(teams1[i],teams2[i]))
+
+    #if not the final match
+    if Xround != 4:
+        #prints out what round we are on
+        print(fg.MAGENTA + style.BRIGHT + roundBox + style.RESET_ALL)        
+        input("\nLets see the scores:\n")
+        os.system("clear")
+
+        for i in range(len(teams1)):
+            if scores1[i] > scores2[i]:
+                #this formats the game nicely and adds colour and brightness to the teams for each match.
+                print("{}{:<18}{} wins against {}{:<18}{} with a score of {}{}-{}{}".format(fg.GREEN + style.BRIGHT + "",teams1[i],style.RESET_ALL + "",fg.RED + style.BRIGHT +"",teams2[i],style.RESET_ALL + "",fg.BLUE + style.BRIGHT + "",scores1[i],scores2[i],style.RESET_ALL + ""))
+                winningTeams.append(teams1[i])
+                
+            #same as above but if team2 wins
+            elif scores1[i] < scores2[i]:                
+                print("{}{:<18}{} wins against {}{:<18}{} with a score of {}{}-{}{}".format(fg.GREEN + style.BRIGHT + "",teams2[i],style.RESET_ALL + "",fg.RED + style.BRIGHT +"",teams1[i],style.RESET_ALL + "",fg.BLUE + style.BRIGHT + "",scores2[i],scores1[i],style.RESET_ALL + ""))
+                winningTeams.append(teams2[i])
+            
+            #checks for draws
+            if scores1[i] == scores2[i]:
+                print("{}{:<18}{} ties against {}{:<18}{} with a score of {}{}-{}{}".format(fg.YELLOW + style.BRIGHT + "",teams1[i],style.RESET_ALL + "",fg.YELLOW + style.BRIGHT +"",teams2[i],style.RESET_ALL + "",fg.BLUE + style.BRIGHT + "",scores1[i],scores2[i],style.RESET_ALL + ""))
+                drawingTeams1.append(teams1[i])
+                drawingTeams2.append(teams2[i])
+        
+        #plays out penalties of drawing teams
+        if any(drawingTeams1):
+            input("\nLet's play out the penalties:")
+
+            os.system('clear')
+
+            #for loop for each penalty game
+            for i in range(len(drawingTeams1)):
+                #nice spacing
+                print("{:<18} vs {:<18}".format(drawingTeams1[i],drawingTeams2[i]))
+                drawScore1 = 0
+                drawScore2 = 0
+                x = 0
+
+                #while loop plays penalty until one team wins
+                while True:
+                    x += 1
+                    Penalty_Round_Box(x)
+                    drawScore1 += random.randint(0,1)
+                    drawScore2 += random.randint(0,1)
+
+                    #for if one team wins penalties
+                    if drawScore1 > drawScore2:
+                        input("{}{:<18}{} wins penalties against {}{:<18}{} with a score of {}{}-{}{} :".format(fg.GREEN + style.BRIGHT + "",drawingTeams1[i],style.RESET_ALL + "",fg.RED + style.BRIGHT +"",drawingTeams2[i],style.RESET_ALL + "",fg.BLUE + style.BRIGHT + "",drawScore1,drawScore2,style.RESET_ALL + ""))
+                        winningTeams.append(drawingTeams1[i])
+                        os.system('clear')
+                        break
+
+                    elif drawScore1 < drawScore2:
+                        input("{}{:<18}{} wins penalties against {}{:<18}{} with a score of {}{}-{}{} :".format(fg.GREEN + style.BRIGHT + "",drawingTeams2[i],style.RESET_ALL + "",fg.RED + style.BRIGHT +"",drawingTeams1[i],style.RESET_ALL + "",fg.BLUE + style.BRIGHT + "",drawScore2,drawScore1,style.RESET_ALL + ""))
+                        winningTeams.append(drawingTeams2[i])
+                        os.system('clear')
+                        break
+                    #if they draw in pens, it continues the loop and plays again
+                    elif drawScore1 == drawScore2:
+                        input("{}{:<18}{} - {}{}{}\n{}{:<18}{} - {}{}{}\n Tie :".format(fg.YELLOW + style.BRIGHT + "",drawingTeams1[i],style.RESET_ALL + "",fg.BLUE + style.BRIGHT + "",drawScore1,style.RESET_ALL + "",fg.YELLOW + style.BRIGHT + "",drawingTeams2[i],style.RESET_ALL + "",fg.BLUE + style.BRIGHT + "",drawScore2,style.RESET_ALL + "",))
+                        os.system('clear')
+                        continue
+                    
+
+
+        
+        input("\nOn to the next round:")
+        os.system("clear")
+
+        return winningTeams
+    
+    #Makes game play out with commentary for the finals.
+    if Xround == 4:
+        print("""{}
+        ╔══════════════╗
+        ║ Grand Finals ║
+        ╚══════════════╝{}
+        """.format(fg.CYAN + style.BRIGHT,style.RESET_ALL)) # To show finals
+
+        input("\nIt's time for the final game, let's begin:\n")
+        
+        os.system("clear")
+        for i in range(len(teams1)):  
+            #the winning/losing final team variables are for when teams are mentioned in commentary.
+            if scores1[i] > scores2[i]:
+                winningFinalTeam = teams1[i]
+                losingFinalTeam = teams2[i]
+
+                #this is a list of different things the commentators can say.
+                finalGameCommentary = [("{}'s number {} is closing in on the goal... AND HE SCORES! :\n".format(winningFinalTeam,random.randint(4,12))),("{}'s number {} is closing in on the goal... OH, WHAT A SAVE FROM {}'s GOALIE!! :\n".format(losingFinalTeam,random.randint(7,19),winningFinalTeam)),("A legendary tackle from {}'s defender is keeping them in the game, will they bring it back?".format(winningFinalTeam))]
+                
+                #randomly chooses from a list of different things to say.
+                input(random.choice(finalGameCommentary))
+                os.system("clear")
+                #announces winner
+                input("With a final score of {}{}-{}{} ,{}{}{} ARE THE CHAMPIONS! : ".format(fg.BLUE + style.BRIGHT + "",scores1[i],scores2[i],style.RESET_ALL + "",fg.GREEN + style.BRIGHT + "",teams1[i],style.RESET_ALL + ""))
+
+                #calls function to present players in team
+                Show_Winning_Team(teams1[i])
+
+            #same as above but if second team wins
+            elif scores1[i] < scores2[i]:
+                winningFinalTeam = teams2[i]
+                losingFinalTeam = teams1[i]
+
+                finalGameCommentary = [("{}'s number {} is closing in on the goal... AND HE SCORES! :\n".format(winningFinalTeam,random.randint(4,12))),("{}'s number {} is closing in on the goal... WHAT A SAVE FROM {}'s GOALIE!! :\n".format(losingFinalTeam,random.randint(7,19),winningFinalTeam)),("A legendary tackle from {}'s defender is keeping them in the game, will they bring it back?",winningFinalTeam)]
+
+                input(random.choice(finalGameCommentary))
+                os.system("clear")
+                input("With a final score of {}{}-{}{} ,{}{}{} ARE THE CHAMPIONS! : ".format(fg.BLUE + style.BRIGHT + "",scores2[i],scores1[i],style.RESET_ALL + "",fg.GREEN + style.BRIGHT + "",teams2[i],style.RESET_ALL + ""))
+
+                Show_Winning_Team(teams2[i])
+            
+            #incase of draw, goes to penalties
+            elif scores1[i] == scores2[i]:
+
+                input("Tied {}{}-{}{}, we are on to the PENALTIES! :".format(fg.BLUE + style.BRIGHT + "",scores1[i],scores2[i],style.RESET_ALL + ""))
+                os.system('clear')
+
+                while True:
+                    x += 1
+                    Penalty_Round_Box(x)
+                    drawScore1 += random.randint(0,1)
+                    drawScore2 += random.randint(0,1)
+
+                    #for if one team wins penalties
+                    if drawScore1 > drawScore2:
+                        input("{}{:<18}{} wins penalties against {}{:<18}{} with a score of {}{}-{}{} :".format(fg.GREEN + style.BRIGHT + "",teams1[i],style.RESET_ALL + "",fg.RED + style.BRIGHT +"",teams2[i],style.RESET_ALL + "",fg.BLUE + style.BRIGHT + "",drawScore1,drawScore2,style.RESET_ALL + ""))
+                        os.system('clear')
+                        input("With a final score of {}{}-{}{} ,{}{}{} ARE THE CHAMPIONS! : ".format(fg.BLUE + style.BRIGHT + "",drawScore1,drawScore2,style.RESET_ALL + "",fg.GREEN + style.BRIGHT + "",teams1[i],style.RESET_ALL + ""))
+                        
+                        winningTeams.append(drawingTeams1[i])
+                        os.system('clear')
+                        Show_Winning_Team(teams1[i])
+                        break
+
+                    elif drawScore1 < drawScore2:
+                        input("{}{:<18}{} wins penalties against {}{:<18}{} with a score of {}{}-{}{} :".format(fg.GREEN + style.BRIGHT + "",drawingTeams2[i],style.RESET_ALL + "",fg.RED + style.BRIGHT +"",drawingTeams1[i],style.RESET_ALL + "",fg.BLUE + style.BRIGHT + "",drawScore2,drawScore1,style.RESET_ALL + ""))
+                        os.system('clear')
+                        print("With a final score of {}{}-{}{} ,{}{}{} ARE THE CHAMPIONS!".format(fg.BLUE + style.BRIGHT + "",drawScore2,drawScore1,style.RESET_ALL + "",fg.GREEN + style.BRIGHT + "",teams2[i],style.RESET_ALL + ""))
+                        winningTeams.append(drawingTeams2[i])
+                        os.system('clear')
+                        Show_Winning_Team(teams2[i])
+                        break
+
+                    #continues if draw in a penalty round
+                    elif drawScore1 == drawScore2:
+                        input("{}{:<18}{} - {}{}{}\n{}{:<18}{} - {}{}{}\n Tie :".format(fg.YELLOW + style.BRIGHT + "",drawingTeams1[i],style.RESET_ALL + "",fg.BLUE + style.BRIGHT + "",drawScore1,style.RESET_ALL + "",fg.YELLOW + style.BRIGHT + "",drawingTeams2[i],style.RESET_ALL + "",fg.BLUE + style.BRIGHT + "",drawScore2,style.RESET_ALL + "",))
+                        os.system('clear')
+                        continue
+
+
+
+        
+
+        return winningTeams 
+
+
+#Main Part of code where functions are called.
+while True:
+    round0 = Play_Round(footBallTeams,0)
+    round1 = Play_Round(round0,1)
+    round2 = Play_Round(round1,2)
+    round3 = Play_Round(round2,3)
+    round4 = Play_Round(round3,4)
+
+    input("Press enter to see next year's matchups! :")
+
+
